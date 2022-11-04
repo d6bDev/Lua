@@ -1,17 +1,8 @@
 -- Made by d6b
 
 local debugmode = true
-local version = "0.6.1"
-local changelog = [[- Fixed lag on cleanup
-Version 0.6
-- Auto Updater will no longer display errors on lua startup
-
-- Improved entity cleanup
-- Improved player timeout
-
-- Hopefully fixed all exceptions when cleanup kicks in, caused by attempting to delete nonexistant entities due to a delayed check
-- Fixed some functions
-- Fixed some minor bugs]]
+local version = "0.7"
+local changelog = [[- Added deez]]
 
 local synctimer = {}
 local settings = {
@@ -90,20 +81,23 @@ local function notification(body, ...)
 end
 local function update_lua(automatic)
     local err
-    async_http.init("raw.githubusercontent.com", "/d6bDev/EntityThrottler/main/EntityThrottler.lua", function(str, headerfields, statuscode)
+    async_http.init("raw.githubusercontent.com", "/d6bDev/Lua/main/EntityThrottler.lua", function(str, headerfields, statuscode)
         err = ""
         if statuscode == 200 then
-            local gitversion = str:match('local version = %"(.-)%"')
+            local gitversion, num = str:match('local version = %"(.-)%"'):gsub('"', ""):gsub('~', "")
+            local gitversionnum = gitversion:gsub('%.', "")
             local gitchangelog = str:match("local changelog = %[%[(.-)%]%]")
-            if gitversion and type(gitversion) == "string" then
-                if tonumber(gitversion) ~= version then
+            if gitversionnum and type(gitversionnum) == "string" then
+                if tonumber(gitversionnum) ~= version then
                     local chunk = load(str)
                     if chunk then
                         local file = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "w")
                         file:write(str)
                         file:close()
-                        util.toast("Successfully updated to version "..gitversion.."\n"..gitchangelog)
-                        util.restart_script()
+                        if num ~= 1 then
+                            util.toast("Successfully updated to version "..gitversion.."\n"..gitchangelog)
+                            util.restart_script()
+                        end
                     else
                         err = "Failed to download update: Error loading file."
                     end
