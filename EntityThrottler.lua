@@ -1,6 +1,6 @@
 -- Made by d6b
 
-local debugmode = true
+local debugmode = false
 local version = "0.6"
 local changelog = [[- Auto Updater will no longer display errors on lua startup
 
@@ -772,7 +772,7 @@ menu.action(settingsroot, "Check for Updates", {}, "Manually check for updates."
     end
 end)
 
-menu.list_action(settingsroot, "View Changelog", {}, "", versions, function(index, clicktype, menuname)
+menu.action(settingsroot, "View Changelog", {}, "", function()
     util.toast("Version "..version.."\n"..changelog)
 end)
 
