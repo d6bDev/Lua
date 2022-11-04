@@ -1,7 +1,7 @@
 -- Made by d6b
 
 local debugmode = true
-local version = "0.6"
+local version = 0.6
 local changelog = [[- Auto Updater will no longer display errors on lua startup
 
 - Improved entity cleanup
@@ -89,10 +89,10 @@ local function notification(body, ...)
 end
 local function update_lua(automatic)
     local err
-    async_http.init("raw.githubusercontent.com", "/d6bDev/EntityThrottler/main/EntityThrottler.lua", function(str, headerfields, statuscode)
+    async_http.init("raw.githubusercontent.com", "/d6bDev/Lua/main/EntityThrottler.lua", function(str, headerfields, statuscode)
         err = ""
         if statuscode == 200 then
-            local gitversion = str:match("local version = (.-)[\r\n]"):gsub("%.", ""):gsub('"', "")
+            local gitversion = str:match("local version = (.-)[\r\n]")
             local gitchangelog = str:match("local changelog = %[%[(.-)%]%]")
             if gitversion and type(gitversion) == "string" then
                 if tonumber(gitversion) ~= version then
@@ -101,7 +101,6 @@ local function update_lua(automatic)
                         local file = io.open(filesystem.scripts_dir()..SCRIPT_RELPATH, "w")
                         file:write(str)
                         file:close()
-                        gitversion = str:match("local version = (.-)[\r\n]"):gsub('"', "")
                         util.toast("Successfully updated to version "..gitversion.."\n"..gitchangelog)
                         util.restart_script()
                     else
