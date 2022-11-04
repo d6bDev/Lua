@@ -1,6 +1,6 @@
 -- Made by d6b
 
-local debugmode = false
+local debugmode = true
 local version = "0.6"
 local changelog = [[- Auto Updater will no longer display errors on lua startup
 
