@@ -1,7 +1,7 @@
 -- Made by d6b
 
 local debugmode = true
-local version = "0.7"
+local version = "~0.7"
 local changelog = [[- Added deez]]
 
 local synctimer = {}
